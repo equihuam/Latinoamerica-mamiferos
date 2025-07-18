@@ -10,6 +10,12 @@ bibliography: references.bib
 engine: knitr
 ---
 
+```{r}
+pacman::p_load(terra, geodata)
+
+```
+
+
 ## Introduction
 
 Climate change in Latin America is
@@ -18,4 +24,16 @@ Taking the Sixth Assessment Report by the IPCC [@lee2023] as an starting point, 
 
 This chapter explore the impacts of climate change over Latin America and the Caribbean region. It is a complex natural geographic span with a complex political structure. We found it convenient to summarize some of the proposals to characterize the region. United Nations has propose the M49 standard [@standard1999] to facilitate the consolidation of national statistical data to regional levels. According to M49 standard Latin Ameria is a region formed by three subregions: Caribbean (28 islands, spanning 15 countries), Central America (8 countries), and South America (16 countries). This regions extends over 20,139,378 km<sup>2</sup> of land. This territory is a little more than 13% of world emerged land. Moving into the see the reference to the Exclusive Economic Zone results in a total area of 140,776,000 km<sup>2</sup> (almost 40% of ocean surface)
 
+<<<<<<< HEAD
+```{r}
+mapa <- vect("~/1 Nubes/OneDrive - El Instituto de Ecología/America Latina y el Caribe/america_latina_caribe_eez_v12.gpkg")
+plot(mapa, values = mapa$GEONAME, legend = F)
+
+mapa2 <- vect("~/1 Nubes/OneDrive - El Instituto de Ecología/America Latina y el Caribe/Morrone_Provincias_Biogeograficas/America Latina y Caribe.shp")
+
+test1 <- terra::(mapa, mapa2)
+plot(test1)
+```
+=======
+>>>>>>> 1c9124e8db6a07864cefc854dfee538822f64b6e
 
