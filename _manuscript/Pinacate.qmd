@@ -2,13 +2,15 @@
 title: "El Pinacate"
 author: "Miguel Equihua"
 format: 
-  docx: default
   html: default
+  docx: default
 ---
 
 En 1980 el gobernador del estado de Sonora, Samuel Ocaña, invitó al Inecol a realizar estudios que conducirían a establecer una nueva reserva de la biosfera en México en la hermosa región del Pinacate, en la región del desierto sonorense. Seguramente lo inspiraban las reservas de la biosfera en Mapimí y la Michilía en Durango. Es también un estímulo sumarse a la innovación que significaba el naciente y ambicioso planteamiento del **proyecto 8** del entonces todavía nuevo programa MAB creado por la UNESCO en 1970. El ** Proyecto 8** *impulsa la creación de un sistema mundial de reservas de la biosfera* mediante el caul se preserven porciones significativas de los ecosistemas del mundo.
 
-El pinacate sin duda es una joya para este notable planteamiento. El inecol, dirigido entonces por su fundador Gonzalo Halffter, convoca a Exequiel Ezcurra, recién llegado de Argentina aencabezar y formar un euipo de trabajo para realizar los estudios solicitados
+El pinacate sin duda es una joya para este notable planteamiento. El inecol, dirigido entonces por su fundador Gonzalo Halffter, convoca a Exequiel Ezcurra, recién llegado de Argentina, a encabezar y formar un equipo multidisciplinario de trabajo para realizar los estudios solicitados. En el grupo estabamos el propio Exequiel, Jorge López-Portillo, yo y un colaborador de Inegi, Enrique Lagunes, haciendo la cartografía, zonificación ecológica e inventario botánico. Alberto González y Jorge Nocedal se abocaron al estudio de la fauna.
+
+Nuestro primer encuentro con esta magestuosa porción del planeta nos impresionó profundamente. Desde el aire se aprecia el gran escudo basáltico negrusco que han formado los más de 400 volcanes que ahí existen, enmarcado por las arenas vivas del Grand Desierto de Altar. Caminar este paisaje es una experiencia sobrecogedora.
 
 el producto de
  tres años de estudios culminó con la elaboración de una propuesta de decreto para la Reserva de la
