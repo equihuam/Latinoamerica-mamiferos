@@ -4,5 +4,11 @@
 .httr-oauth
 .DS_Store
 .quarto
-
+data
 /.quarto/
+.RDataTmp
+.RDataTmp1
+.RDataTmp2
+.RDataTmp3
+.RDataTmp4
+sesion.RData
