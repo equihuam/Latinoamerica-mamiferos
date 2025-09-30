@@ -12,3 +12,5 @@ data
 .RDataTmp3
 .RDataTmp4
 sesion.RData
+_data
+_output
