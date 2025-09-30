@@ -27,13 +27,11 @@ This chapter explore the impacts of climate change over Latin America and the Ca
 
 ```{r}
 mapa <- vect("~/1 Nubes/OneDrive - El Instituto de Ecología/America Latina y el Caribe/america_latina_caribe_eez_v12.gpkg")
-
 plot(mapa, values = mapa$GEONAME, legend = F)
 
 mapa2 <- vect("~/1 Nubes/OneDrive - El Instituto de Ecología/America Latina y el Caribe/Morrone_Provincias_Biogeograficas/America Latina y Caribe.shp")
 
 #test1 <- terra::(mapa, mapa2)
-
 #plot(test1)
 ```
 
