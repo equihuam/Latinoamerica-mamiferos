@@ -1,0 +1,243 @@
+---
+title: "Climate change impacts in Latin America"
+Author: Miguel Equihua
+format: html
+---
+
+
+## Current state of climate change effects
+
+Latin America is considered among the most **climate-vulnerable regions** (sharing risk with Africa, Small Island Developing States, South and Southeast Asia, Middle East and the Arctic), despite the relatively small contribution to global greenhouse gas emissions of all this regions.
+
+The particular exposure of Latin America steam from a combination of structured factors. It is a region where climate hazards have a large probability to strike. This is a result of the geographical position. It spans the tropics, subtropics, and has an extensive coastlines, so it is exposed to hurricanes (Caribbean, Central America), El Niño/La Niña–driven droughts and floods (Pacific coast, Andes, Southern Cone), and heatwaves. Some sub-regions, like the tropical Andes, depend on glaciers as a source of water supply. There are ample sub-regions with low-lying coastal lands. River deltas, mangrove coastal forest and the Caribbean islands are clearly vulnerable to sea-level rise, storm surge and erosion.
+
+The region is biodiversity rich. Five of the 17 megadiverse countries are located here: Brazil, Ecuador, Mexico, Peru and Venezuela. There are worldwide unique and fragile ecosystems located in the region. Some of them of global relevance: Amazon rainforets, Coral reefs, mangroves, páramo andino and tropical dry forest are widely recognized for its role in Holocene biosphere. The biocultural binding is strongly preserved in the region, making local livelihoods rely on these ecosystems for food, water, and raw materials.
+
+But Latin America is also vulnerable because of socio-economic hardships. Inequity and poverty are widespread and pervasive, making difficult for people to cope with disasters. It is estimated that climate shocks push million into poverty or food insecurity. Cities grow through pattern of *informality*. This means that settlements are common to spread into floodplain, hillside or heat-prone territories. Related to all these, is the heavy economic and livelihood dependency on agriculture which makes food climate-dependent and spreads the human impact to wildlife and fisheries.
+
+Therefore, Latin America an the Caribbean can be regarded to have a high physical exposure to climate change, has a global ecological importance. The human population in the region has economic dependence on climate-sensitive sectors, and social inequality provoke a state of “double vulnerability”: high sensibility to the impacts of climate change and limited adaptive capacity. A current state of perceived effects can be summarized as ilustrated in [@tbl-efectos]
+
+
+| Concept  | Identified effect |
+| -------------- | --------------------------------- |
+| **Climate patterns** | Average temperatures have risen; heatwaves are more frequent. Rainfall patterns are shifting: some areas are drier (more droughts), others have heavier rains.|
+| **Extreme events**                  | Stronger and more frequent floods, droughts, wildfires, hurricanes, and intense storms. 2024 saw major hurricanes, floods, and droughts across the region.|
+| **Water resources**      | Andean glaciers are retreating rapidly, reducing dry-season water supply for drinking, irrigation, and hydropower.|
+| **Ecosystems & biodiversity**       | Amazon deforestation disrupts rainfall cycles and “flying rivers” (moisture flows). Coastal ecosystems (mangroves, reefs) suffer from sea-level rise and acidification. Species loss and range shifts are already occurring. |
+| **Agriculture & food security**     | Yields are falling in some crops due to heat and rainfall variability. Fisheries are stressed by ocean warming and acidification. Extreme events increase hunger risk in vulnerable populations.|
+| **Human health** | More mosquito-borne diseases (dengue, zika, chikungunya). Heatwaves raise mortality and stress health systems. Many areas lack infrastructure to cope with heat or disasters. |
+| **Economy & inequality** | Disasters already cause major losses in infrastructure and growth. Low-income and rural communities are hit hardest. Climate events can reduce GDP growth and push millions into poverty, especially children.|
+: Some effects of climate change in Latin America that already have been detected {#tbl-efectos}
+
+
+## Outlook toward 2030
+
+The degree of impact depends on whether countries meet their emission-reduction and adaptation goals. Current science anticipates **worsening climate impacts even in moderate mitigation scenarios**.
+
+| Area / dimension           | Expected trends by 2030                                                                                                                                                                                    |
+| -------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Mitigation & emissions** | Countries have pledged to cut emissions 24–29 % vs. business-as-usual, but institutional, financial, and tech barriers threaten progress.                                                                  |
+| **Extreme weather**        | Droughts, heavy rains, and storms will intensify; more frequent flash floods and prolonged dry spells.                                                                                                     |
+| **Water & glaciers**       | Continued glacier retreat in the Andes; dry-season water shortages likely to worsen in key basins.                                                                                                         |
+| **Agriculture & food**     | Lower yields and greater losses from climate shocks; food price volatility and supply risks for vulnerable groups.                                                                                         |
+| **Health**                 | More heatwaves, heat-related deaths, and vector-borne diseases as mosquito habitats expand.                                                                                                                |
+| **Economy & poverty**      | Climate disasters will keep driving losses in housing, transport, and farming. Millions more children may fall into poverty; rural, Indigenous, and informal urban communities face the greatest hardship. |
+
+Other critical notes:
+
+* **Amazon tipping point risk:** if deforestation continues, large parts may shift to drier savanna-like systems, disrupting continental water cycles.
+* **Finance needs:** development banks estimate climate funding in the region must rise sharply (e.g., IDB plans ~US $11 B/year by 2030).
+* **Policy gap:** many countries have climate laws and Paris Agreement commitments, but enforcement and capacity remain uneven.
+
+---
+
+## Bottom line
+
+* **Impacts are already visible and accelerating:** heat, drought, floods, crop losses, disease spread, and inequality are deepening.
+* **By 2030, these effects will likely intensify** unless mitigation and adaptation scale up significantly.
+* **Key levers:** stronger climate governance, resilient infrastructure, water management, protecting ecosystems (especially Amazon & coasts), and closing finance/technology gaps.
+
+
+
+```{r}
+#| eval: false
+
+# ============================
+# Mapas "2030" (2021–2040) vs 1970–2000 para América Latina
+# Variables: Temperatura media anual (Δ °C) y Precipitación anual (Δ %)
+# Fuentes: WorldClim v2.1 (baseline) y CMIP6 bias-corrected (futuro); Natural Earth (límites)
+# ============================
+
+# Bibliotecas
+pacman::p_load("terra", "sf", "geodata", "rnaturalearth", 
+               "rnaturalearthdata", "ggplot2", "dplyr", 
+               "purrr", "stringr")
+
+
+# Carpeta de trabajo / salidas ----
+dir.create("_data", showWarnings = FALSE)
+dir.create("_output", showWarnings = FALSE)
+
+# Área de interés: América Latina ----
+# Subregiones de Natural Earth: "South America", "Central America", "Caribbean"
+ne <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf")
+
+aoi <- ne %>%
+  filter(subregion %in% c("South America", "Central America", "Caribbean") |
+                          name %in% c("Mexico")) %>%
+  select(name, subregion)
+
+# Funciones auxiliares ----
+to_df <- function(r, aoi_sf) {
+  # Recorta y enmascara al AOI, convierte a data.frame para ggplot
+  r2 <- terra::crop(r, terra::vect(aoi_sf)) |> terra::mask(terra::vect(aoi_sf))
+  as.data.frame(r2, xy = TRUE, na.rm = TRUE)}
+
+nice_breaks <- function(x, n = 7) pretty(x, n = n)
+
+plot_raster <- function(df, value_col, title, subtitle, legend_title, outfile_png, aoi_sf) {
+  gg <- ggplot() +
+    geom_raster(data = df, aes(x = x, y = y, fill = .data[[value_col]])) +
+    geom_sf(data = aoi_sf, fill = NA, color = "grey20", linewidth = 0.2) +
+    coord_sf(expand = FALSE) +
+    labs(title = title, subtitle = subtitle, fill = legend_title,
+         caption = "Fuente: WorldClim v2.1 (baseline 1970–2000; CMIP6 2021–2040), Natural Earth") +
+    scale_fill_viridis_c(option = "C", na.value = NA) +
+    theme_minimal(base_size = 11) +
+    theme(panel.grid = element_blank())
+  ggsave(outfile_png, gg, width = 8.5, height = 9.5, dpi = 300)
+  invisible(gg)
+}
+
+# Parámetros de usuario ----
+# Resolución: 10 minutos (~18 km al ecuador). Puedes cambiar a 2.5  (2.5 minutos) si tu RAM lo permite.
+res_wc <- 10
+
+# Escenarios y modelos CMIP6 (puedes ampliar esta lista)
+ssps    <- c("245", "585")  # SSP2-4.5, SSP5-8.5
+models  <- c("BCC-CSM2-MR", "MIROC6", "CNRM-CM6-1")  # ejemplo de 3 modelos
+periodo <- "2021-2040"      # "near term" ~ 2030
+
+# Descarga: baseline (1970–2000) ----
+# tavg: 12 capas mensuales (°C); prec: 12 capas mensuales (mm)
+message("Descargando WorldClim v2.1 baseline...")
+tavg_base <- geodata::worldclim_global(var = "tavg", res = res_wc, path = "_data")
+prec_base <- geodata::worldclim_global(var = "prec", res = res_wc, path = "_data")
+
+# WorldClim tavg suele estar en °C (algunas versiones antiguas en 0.1 °C). Por si acaso:
+if (max(terra::global(tavg_base, "max", na.rm = TRUE)) > 90) {
+  tavg_base <- tavg_base / 10
+}
+
+# Agregados anuales baseline
+tmean_base_ann <- terra::mean(tavg_base)            # °C
+prec_base_ann  <- terra::global(prec_base, fun = "sum", na.rm = TRUE)         # mm/año
+
+# Descarga: futuro CMIP6 y ensemble simple ----
+get_future_stack <- function(var, ssp, model, periodo, res_wc) {
+  # var = "tavg" o "prec"
+  geodata::cmip6_world(var = var, res = res_wc, ssp = ssp,
+                       model = model, time = periodo, path = "data")
+}
+
+# Para cada SSP, construimos un ensemble promedio (promedio simple sobre 'models')
+build_ensemble <- function(var, ssp) {
+  message(sprintf("Descargando futuro %s, SSP%s ...", var, ssp))
+  stacks <- purrr::map(models, ~ get_future_stack(var, ssp, .x, periodo, res_wc))
+  # Asegurar orden de capas y dimensiones
+  # (cada stack trae 12 meses)
+  s <- terra::sprc(stacks) |> terra::mosaic() # unión espacial segura
+  # Promedio sobre modelos: apilamos por capa mensual (12 capas), luego mean
+  # Para evitar problemas, calculamos mean por capa índice:
+  layers <- seq_len(terra::nlyr(stacks[[1]]))
+  mean_months <- lapply(layers, function(i) {
+    terra::mean(terra::rast(purrr::map(stacks, ~ .x[[i]])))
+  })
+  terra::rast(mean_months)
+}
+
+# Construye ensembles para tavg/prec por SSP
+ens_future <- list()
+for (ssp in ssps) {
+  tavg_fut <- build_ensemble("tavg", ssp)
+  prec_fut <- build_ensemble("prec", ssp)
+  # Conversión por si tavg viene en 0.1 °C
+  if (max(terra::global(tavg_fut, "max", na.rm = TRUE)) > 90) {
+    tavg_fut <- tavg_fut / 10
+  }
+  ens_future[[ssp]] <- list(
+    tmean = terra::mean(tavg_fut),  # °C anual
+    prec  = terra::sum(prec_fut)    # mm/año
+  )
+}
+
+# Deltas: futuro - baseline ----
+# Temperatura: Δ °C; Precipitación: Δ % = (fut - base)/base * 100
+for (ssp in ssps) {
+  message(sprintf("Calculando deltas para SSP%s ...", ssp))
+  dT <- ens_future[[ssp]]$tmean - tmean_base_ann
+  dP <- (ens_future[[ssp]]$prec - prec_base_ann) / prec_base_ann * 100
+
+  # Exportar GeoTIFF
+  terra::writeRaster(dT, filename = file.path("_output", sprintf("latam_delta_Tmean_SSP%s_%s.tif", ssp, periodo)),
+                     overwrite = TRUE)
+  terra::writeRaster(dP, filename = file.path("_output", sprintf("latam_delta_Pann_pct_SSP%s_%s.tif", ssp, periodo)),
+                     overwrite = TRUE)
+
+  # DataFrames para mapas
+  df_dT <- to_df(dT, aoi)
+  df_dP <- to_df(dP, aoi)
+
+  # Mapas PNG
+  plot_raster(
+    df = df_dT,
+    value_col = names(df_dT)[3],
+    title = paste0("Δ Temperatura media anual (°C)"),
+    subtitle = sprintf("Ensemble CMIP6 (models: %s), SSP%s vs 1970–2000; periodo %s",
+                       paste(models, collapse = ", "), ssp, periodo),
+    legend_title = "Δ °C",
+    outfile_png = file.path("_output", sprintf("latam_delta_Tmean_SSP%s_%s.png", ssp, periodo)),
+    aoi_sf = aoi
+  )
+
+  plot_raster(
+    df = df_dP,
+    value_col = names(df_dP)[3],
+    title = paste0("Δ Precipitación anual (%)"),
+    subtitle = sprintf("Ensemble CMIP6 (models: %s), SSP%s vs 1970–2000; periodo %s",
+                       paste(models, collapse = ", "), ssp, periodo),
+    legend_title = "Δ %",
+    outfile_png = file.path("_output", sprintf("latam_delta_Pann_pct_SSP%s_%s.png", ssp, periodo)),
+    aoi_sf = aoi
+  )
+}
+
+# Mapas de baseline (opcional): útil para contexto ----
+df_Tbase <- to_df(tmean_base_ann, aoi)
+df_Pbase <- to_df(prec_base_ann,  aoi)
+
+plot_raster(
+  df = df_Tbase,
+  value_col = names(df_Tbase)[3],
+  title = "Temperatura media anual (°C) - baseline",
+  subtitle = "WorldClim v2.1 1970–2000",
+  legend_title = "°C",
+  outfile_png = file.path("_output", "latam_Tmean_baseline_1970_2000.png"),
+  aoi_sf = aoi
+)
+
+plot_raster(
+  df = df_Pbase,
+  value_col = names(df_Pbase)[3],
+  title = "Precipitación anual (mm) - baseline",
+  subtitle = "WorldClim v2.1 1970–2000",
+  legend_title = "mm/año",
+  outfile_png = file.path("_output", "latam_Pann_baseline_1970_2000.png"),
+  aoi_sf = aoi
+)
+
+message("Listo. Revisa la carpeta '_output' para los GeoTIFF y PNG.")
+
+```
+
+
